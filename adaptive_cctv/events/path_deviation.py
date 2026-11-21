@@ -165,7 +165,3 @@ def EvaluateVideoAnomaly(video_path, interval=0.1, model_path="yolo26n.pt", trac
 
     # 모든 차량이 조건에 안 걸리면 정상
     return "X"
-
-
-result = EvaluateVideoAnomaly("vno.mp4")
-print(f"최종 판별 결과: {result}")
