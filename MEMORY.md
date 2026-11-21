@@ -15,6 +15,8 @@ How to maintain this file:
 
 ## 2026-11-21
 
+- **Change:** Added `requirements.txt` listing the two packages the code imports. Versions
+  are not pinned yet.
 - **Change:** Imported the team's code as written: tracking, the sudden-stop detector, the
   path-deviation draft, and the tracking visualization script. The files are not wired
   together yet and no content was changed.
