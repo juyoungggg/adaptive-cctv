@@ -37,7 +37,7 @@ Commits follow [Conventional Commits](https://www.conventionalcommits.org/), for
 
 ## Documentation
 
-- [docs/design.md](docs/design.md): decisions, module interfaces, event definitions,
+- [docs/DESIGN.md](docs/DESIGN.md): decisions, module interfaces, event definitions,
   datasets, and evaluation.
 - [MEMORY.md](MEMORY.md): progress log of changes and decisions, newest first.
 - [AGENTS.md](AGENTS.md): working rules for coding agents.
