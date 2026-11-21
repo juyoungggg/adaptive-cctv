@@ -25,9 +25,9 @@ and on-camera operation are future work.
 
 ## Status
 
-The modules (tracking, event detection, encoding) are being written separately and will be
-integrated in this repository. Run instructions will be added here when the first code
-lands.
+Tracking, the sudden-stop detector, and a path-deviation draft are in the repository as
+separate modules. They are not connected into one pipeline yet, and the encoder is not
+written.
 
 ## Setup
 
@@ -35,6 +35,21 @@ lands.
 python3 -m venv .venv
 .venv/bin/pip install -r requirements.txt
 ```
+
+## Usage
+
+Run from the repository root. Videos are not included in the repository; pass the path to
+your own file.
+
+```bash
+# Print each vehicle's recent positions and pixel speed, in 5-second chunks
+.venv/bin/python -m adaptive_cctv.tracking <video>
+
+# Write a copy of the video with boxes, track ids, and paths, plus a CSV of positions
+.venv/bin/python -m scripts.visualize <video> [--output OUT.mp4] [--csv OUT.csv] [--focus-id ID]
+```
+
+The first run downloads the `yolo26n.pt` weights into the working directory.
 
 ## Contributing
 
