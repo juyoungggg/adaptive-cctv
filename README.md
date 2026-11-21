@@ -33,10 +33,11 @@ lands.
 
 Commits follow [Conventional Commits](https://www.conventionalcommits.org/), for example
 `feat(events): add sudden stop detector`. Pull requests are pre-filled from
-`.github/pull_request_template.md`.
+`.github/PULL_REQUEST_TEMPLATE.md`.
 
 ## Documentation
 
 - [docs/design.md](docs/design.md): decisions, module interfaces, event definitions,
   datasets, and evaluation.
+- [MEMORY.md](MEMORY.md): progress log of changes and decisions, newest first.
 - [AGENTS.md](AGENTS.md): working rules for coding agents.

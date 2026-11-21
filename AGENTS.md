@@ -26,6 +26,14 @@ Working rules for coding agents in this repository. For what the project is, rea
 - **Do not commit dataset files, videos, or model weights.** They are large and governed
   by each dataset's own terms of use.
 
+## Progress log
+
+- **Update [MEMORY.md](MEMORY.md) in the same change as every feature-level change or
+  decision.** It is the only record of what was decided and when; the code does not show
+  it. Newest entry on top.
+- **Keep MEMORY.md free of proper nouns for people, organizations, and clients.** The file
+  is public. Write "the advisor", "a teammate", "the main dataset".
+
 ## Commits
 
 - Use Conventional Commits: `<type>(<scope>): <subject>`, for example
