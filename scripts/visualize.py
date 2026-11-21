@@ -3,7 +3,7 @@ import csv
 from collections import defaultdict, deque
 
 # 팀원이 만든 함수 불러오기
-from main import TrackCar, findtraj, findspeed
+from adaptive_cctv.tracking import TrackCar, findtraj, findspeed
 
 # 입력 영상 및 출력 파일 경로
 VIDEO_PATH = "cctv_1.mp4"
