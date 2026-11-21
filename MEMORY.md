@@ -15,6 +15,11 @@ How to maintain this file:
 
 ## 2026-11-21
 
+- **Change:** Imported the team's code as written: tracking, the sudden-stop detector, the
+  path-deviation draft, and the tracking visualization script. The files are not wired
+  together yet and no content was changed.
+- **Decision:** Importable code lives in the `adaptive_cctv/` package; directly run
+  utilities live in `scripts/`.
 - **Change:** Set up the repository documentation: README for the project, design doc for
   the agreed design, AGENTS.md for agent working rules.
 - **Change:** Added a pull request template (Summary, Changes, Testing, Notes) and a
