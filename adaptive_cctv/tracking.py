@@ -1,3 +1,4 @@
+import argparse
 from ultralytics import YOLO
 import cv2
 import math
@@ -190,9 +191,13 @@ def findspeed(trajectories):
 
 if __name__ == "__main__":
 
+    parser = argparse.ArgumentParser()
+    parser.add_argument("video", help="path to the input video")
+    args = parser.parse_args()
+
     previous_chunk = []
 
-    for chunk_data in TrackCar("v1.mov", chunk_seconds=5):
+    for chunk_data in TrackCar(args.video, chunk_seconds=5):
 
         # 이전 5초 + 현재 5초 데이터 결합
         combined_data = previous_chunk + chunk_data
