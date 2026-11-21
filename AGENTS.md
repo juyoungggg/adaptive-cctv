@@ -48,4 +48,8 @@ Working rules for coding agents in this repository. For what the project is, rea
 
 - Install: `python3 -m venv .venv && .venv/bin/pip install -r requirements.txt`
 
-There are no run, test, or lint commands yet. Record them here when they land.
+- Tracking check: `.venv/bin/python -m adaptive_cctv.tracking <video>`
+- Visualization: `.venv/bin/python -m scripts.visualize <video>`
+
+Run from the repository root; scripts are run as modules so that `adaptive_cctv` imports
+resolve. There are no test or lint commands yet. Record them here when they land.
