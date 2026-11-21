@@ -1,20 +1,14 @@
+import argparse
 import cv2
 import csv
 from collections import defaultdict, deque
+from pathlib import Path
 
 # 팀원이 만든 함수 불러오기
 from adaptive_cctv.tracking import TrackCar, findtraj, findspeed
 
-# 입력 영상 및 출력 파일 경로
-VIDEO_PATH = "cctv_1.mp4"
-OUTPUT_PATH = "cctv_1_tracking_visualized.mp4"
-CSV_PATH = "cctv_1_tracking_data.csv"
 
-# None이면 모든 차량 표시, 예: 211을 입력하면 ID 211 차량만 표시
-FOCUS_ID = None
-
-
-def visualize(video_path, tracking_data):
+def visualize(video_path, tracking_data, output_path, focus_id=None):
     cap = cv2.VideoCapture(video_path)
 
     if not cap.isOpened():
@@ -29,7 +23,7 @@ def visualize(video_path, tracking_data):
         raise ValueError("FPS 정보를 확인할 수 없습니다.")
 
     writer = cv2.VideoWriter(
-        OUTPUT_PATH,
+        output_path,
         cv2.VideoWriter_fourcc(*"mp4v"),
         fps,
         (width, height)
@@ -84,7 +78,7 @@ def visualize(video_path, tracking_data):
                 del last_seen[tid]
                 continue
 
-            if FOCUS_ID is not None and tid != FOCUS_ID:
+            if focus_id is not None and tid != focus_id:
                 continue
 
             # 최근 3초 경로만 표시
@@ -140,12 +134,12 @@ def visualize(video_path, tracking_data):
 
     cap.release()
     writer.release()
-    print(f"시각화 영상 저장 완료: {OUTPUT_PATH}")
+    print(f"시각화 영상 저장 완료: {output_path}")
 
 
-def save_csv(tracking_data):
+def save_csv(tracking_data, csv_path):
     with open(
-        CSV_PATH, "w", newline="", encoding="utf-8-sig"
+        csv_path, "w", newline="", encoding="utf-8-sig"
     ) as file:
         writer = csv.writer(file)
         writer.writerow([
@@ -168,16 +162,38 @@ def save_csv(tracking_data):
                     car["confidence"]
                 ])
 
-    print(f"좌표 CSV 저장 완료: {CSV_PATH}")
+    print(f"좌표 CSV 저장 완료: {csv_path}")
 
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument("video", help="path to the input video")
+    parser.add_argument(
+        "--output",
+        help="path of the visualized video "
+        "(default: <video stem>_tracking_visualized.mp4)"
+    )
+    parser.add_argument(
+        "--csv",
+        help="path of the tracking CSV "
+        "(default: <video stem>_tracking_data.csv)"
+    )
+    parser.add_argument(
+        "--focus-id",
+        type=int,
+        help="draw only this track ID (default: all)"
+    )
+    args = parser.parse_args()
+    stem = Path(args.video).stem
+    output_path = args.output or f"{stem}_tracking_visualized.mp4"
+    csv_path = args.csv or f"{stem}_tracking_data.csv"
+
     all_data = []
     previous_chunk = []
 
     # 팀원이 만든 5초 단위 추적 함수 활용
     for chunk_data in TrackCar(
-        VIDEO_PATH,
+        args.video,
         chunk_seconds=5
     ):
         combined_data = previous_chunk + chunk_data
@@ -198,6 +214,6 @@ if __name__ == "__main__":
     print(f"전체 추적 ID 수: {len(trajectories)}")
 
     # 결과 저장
-    save_csv(all_data)
-    visualize(VIDEO_PATH, all_data)
+    save_csv(all_data, csv_path)
+    visualize(args.video, all_data, output_path, args.focus_id)
     print("모든 작업 완료!")
