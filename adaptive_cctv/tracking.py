@@ -186,3 +186,35 @@ def findspeed(trajectories):
         speed_data[track_id] = speeds
 
     return speed_data
+
+
+if __name__ == "__main__":
+
+    previous_chunk = []
+
+    for chunk_data in TrackCar("v1.mov", chunk_seconds=5):
+
+        # 이전 5초 + 현재 5초 데이터 결합
+        combined_data = previous_chunk + chunk_data
+
+        # 차량별 경로 추출
+        trajectories = findtraj(combined_data)
+
+        # 차량별 픽셀 속도 계산
+        speed_data = findspeed(trajectories)
+
+        print("\n========== 분석 결과 ==========")
+
+        for track_id, points in trajectories.items():
+
+            print(f"\n차량 ID: {track_id}")
+            print(f"경로 좌표: {points[-3:]}")
+            print(
+                f"픽셀 속도: "
+                f"{speed_data.get(track_id, [])[-3:]}"
+            )
+
+        # 다음 청크에서 사용할 데이터 보관
+        previous_chunk = chunk_data
+
+    print("\n전체 영상 분석 완료!")
