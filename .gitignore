@@ -1,0 +1,32 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+
+# Datasets and videos: large, and governed by each dataset's terms of use
+data/
+datasets/
+*.mp4
+*.mov
+*.avi
+*.mkv
+
+# Model weights and Ultralytics run outputs
+*.pt
+*.onnx
+runs/
+
+# Agent tool state
+.omc/*
+!.omc/skills/
+.claude/settings.local.json
+
+# OS and editors
+.DS_Store
+.idea/
+.vscode/
