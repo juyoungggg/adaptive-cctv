@@ -11,13 +11,18 @@ This is a university capstone project (2026 fall semester).
 
 ## How it works
 
-```
-CCTV video
-  -> vehicle detection (YOLO26n)
-  -> vehicle tracking (ByteTrack)
-  -> per-vehicle trajectory
-  -> event detection: sudden stop, path deviation
-  -> storage: normal segments at low quality, event segments at high quality
+```mermaid
+flowchart TD
+  A[CCTV video] --> B[Frame sampling<br/>every 0.1 s]
+  B --> C[Vehicle detection<br/>YOLO26n]
+  C --> D[Vehicle tracking<br/>ByteTrack]
+  D --> E[Trajectory and pixel speed<br/>per vehicle]
+  E --> F[Sudden stop detector]
+  E --> G[Path deviation detector]
+  F --> H[High-quality intervals]
+  G --> H
+  H --> I[Encoder]
+  I --> J[Stored video<br/>normal: low quality<br/>event: high quality]
 ```
 
 The current scope is an offline pipeline that runs on recorded video on a PC. Real-time
