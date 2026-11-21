@@ -15,6 +15,11 @@ How to maintain this file:
 
 ## 2026-11-21
 
+- **Change:** Added the encoder. It stores a video as one H.264 file with event intervals
+  at high quality and the rest at low quality, and can write the all-high baseline.
+- **Decision:** The encoder lowers quality by compression level only, keeping resolution
+  and frame rate. In a trial on one short clip this kept more visual quality at the same
+  size than downscaling and scaling back up, and it yields a single playable file.
 - **Change:** Added `requirements.txt` listing the two packages the code imports. Versions
   are not pinned yet.
 - **Change:** Imported the team's code as written: tracking, the sudden-stop detector, the

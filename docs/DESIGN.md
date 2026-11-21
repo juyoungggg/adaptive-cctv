@@ -46,7 +46,7 @@ repository.
 | Visualization | `visualize()` draws bboxes, track ids, and the last 3 s of each path on the video. `save_csv()` writes frame, time, track id, center, and confidence. |
 | Sudden stop | `EventDetector_SuddenStop().update(trajectories)` returns events for the chunk. `events_to_intervals(events, pre, post, merge_gap)` returns merged `(start, end)` high-quality intervals. |
 | Path deviation | Draft only: `check_lane_departure_events(trajectory)` returns a bool for one vehicle. |
-| Encoder | Not written. Consumes the `(start, end)` intervals. |
+| Encoder | `encode_differential(video_path, intervals, output_path)` writes one H.264 MP4 with the intervals at high quality and the rest at low quality. `encode_uniform(video_path, output_path)` writes the all-high baseline that savings are measured against. |
 
 Shapes:
 
@@ -102,17 +102,29 @@ Keep high quality for 5 s after an event ends. The pre-event window is 5 s in th
 `pre=3.0` in the draft code; not reconciled. A new event during the tail extends the
 window.
 
-## Storage quality (draft values)
+## Storage quality
 
-| Segment | Resolution | Frame rate | CRF |
-| --- | --- | --- | --- |
-| Event | 1080p | 30 fps | about 20 |
-| Normal | 480p | 10-15 fps | about 32 |
+The first version of the encoder changes only the compression level. Resolution and frame
+rate stay as in the source, so the result is one file that plays in any player.
 
-- The encoder is not chosen. Changing bitrate or QP is to be tried before changing
-  resolution mid-stream, to avoid stutter at the switch.
+| Segment | CRF (H.264, libx264) |
+| --- | --- |
+| Event | 20 |
+| Normal | 32 |
+
+The CRF values are drafts and will be tuned.
+
+- Why compression level only: in a trial on one 8-second road clip, re-encoding at the
+  source resolution with a higher CRF kept more visual quality than downscaling to 480p
+  and scaling back up, at about the same file size (VMAF 83.9 against 74.0, both near one
+  fifth of the all-high size). One clip is too small a sample to generalize the numbers.
+- The earlier draft also lowered resolution and frame rate for normal segments (480p,
+  10-15 fps). That is not applied: it needs a separate file per segment.
 - Savings must come from the encoded file. Downscaling for display does not count.
-- A ring buffer keeps pre-event footage available at high quality.
+- The pipeline is offline, so footage before an event is kept by starting the high-quality
+  interval earlier. A ring buffer is only needed for real-time operation.
+- Savings are measured against the same video encoded entirely at the event CRF. Whether
+  to report against that file or against the camera's original file is undecided.
 
 ## Datasets
 
@@ -149,7 +161,11 @@ false detection only costs some storage.
 - Decide how lanes are obtained for path deviation.
 - Agree on one event `type` name per event (the sudden-stop draft uses both `sudden_stop`
   and `hard_brake`).
-- Choose and implement the encoder, then run the storage-reduction experiments.
+- Run the storage-reduction experiments on the main dataset, and decide the baseline they
+  are reported against.
+- Tracking computes event times as `frame_index / fps`, which assumes a constant frame
+  rate; the encoder maps intervals by each frame's real timestamp. On variable-frame-rate
+  video the two can differ by a few frames.
 - Choose the extension dataset.
 - Tune event thresholds on real data.
 - Add supporting features: remaining storage capacity, lane information, lighting and

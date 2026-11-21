@@ -46,10 +46,12 @@ Working rules for coding agents in this repository. For what the project is, rea
 
 ## Commands
 
-- Install: `python3 -m venv .venv && .venv/bin/pip install -r requirements.txt`
+- Install: `python3 -m venv .venv && .venv/bin/pip install -r requirements.txt`. The
+  encoder also needs `ffmpeg` on the PATH.
 
 - Tracking check: `.venv/bin/python -m adaptive_cctv.tracking <video>`
 - Visualization: `.venv/bin/python -m scripts.visualize <video>`
+- Encoder: `.venv/bin/python -m adaptive_cctv.encoder <video> <output.mp4> --interval START END`
 
 Run from the repository root; scripts are run as modules so that `adaptive_cctv` imports
 resolve. There are no test or lint commands yet. Record them here when they land.
