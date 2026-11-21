@@ -9,7 +9,7 @@ How to maintain this file:
 - One line per item, starting with **Decision** or **Change**. Say what and why, not how.
 - This file is public. Generalize proper nouns: no names of people, organizations, or
   clients. Write "the advisor", "a teammate", "the main dataset".
-- Details belong in [docs/design.md](docs/design.md). Link to it instead of repeating it.
+- Details belong in [docs/DESIGN.md](docs/DESIGN.md). Link to it instead of repeating it.
 
 ---
 

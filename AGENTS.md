@@ -1,11 +1,11 @@
 # AGENTS.md
 
 Working rules for coding agents in this repository. For what the project is, read
-[README.md](README.md). For the design, read [docs/design.md](docs/design.md).
+[README.md](README.md). For the design, read [docs/DESIGN.md](docs/DESIGN.md).
 
 ## Before you change code
 
-- Read `docs/design.md` before touching detection, tracking, event logic, or encoding. It
+- Read `docs/DESIGN.md` before touching detection, tracking, event logic, or encoding. It
   holds the settled decisions, module interfaces, data shapes, and thresholds, and the
   code alone does not show which values the team has agreed on.
 
@@ -18,11 +18,11 @@ Working rules for coding agents in this repository. For what the project is, rea
   figure is a liability.
 - **Do not change a settled decision, a threshold, or a module interface silently.** Each
   module has a different author and the values are what the team has reported. State the
-  change and update `docs/design.md` in the same commit.
+  change and update `docs/DESIGN.md` in the same commit.
 - **Keep every threshold as a named parameter or in configuration.** They are provisional
   and will be tuned on real data, so a literal buried in logic will be missed.
 - **Get the base pipeline working end to end before adding anything else.** Supporting
-  features and real-time operation come after; see the open items in `docs/design.md`.
+  features and real-time operation come after; see the open items in `docs/DESIGN.md`.
 - **Do not commit dataset files, videos, or model weights.** They are large and governed
   by each dataset's own terms of use.
 
