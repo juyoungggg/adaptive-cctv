@@ -39,7 +39,7 @@ Working rules for coding agents in this repository. For what the project is, rea
 - Use Conventional Commits: `<type>(<scope>): <subject>`, for example
   `feat(events): add sudden stop detector`.
   - Types: `feat`, `fix`, `docs`, `refactor`, `perf`, `test`, `build`, `ci`, `chore`.
-  - Always give a scope: `tracking`, `events`, `encoder`, `eval`, `docs`, `deps`, or a
+  - Always give a scope: `tracking`, `events`, `encoder`, `eval`, `docs`, `readme`, `deps`, or a
     topic such as `imports` or `cli` when the change spans folders.
   - Subject: imperative mood, lower case, no trailing period.
 - Write the subject line only. Leave the commit message body empty.
