@@ -29,6 +29,13 @@ The modules (tracking, event detection, encoding) are being written separately a
 integrated in this repository. Run instructions will be added here when the first code
 lands.
 
+## Setup
+
+```bash
+python3 -m venv .venv
+.venv/bin/pip install -r requirements.txt
+```
+
 ## Contributing
 
 Commits follow [Conventional Commits](https://www.conventionalcommits.org/), for example

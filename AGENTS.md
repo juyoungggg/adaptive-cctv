@@ -39,11 +39,13 @@ Working rules for coding agents in this repository. For what the project is, rea
 - Use Conventional Commits: `<type>(<scope>): <subject>`, for example
   `feat(events): add sudden stop detector`.
   - Types: `feat`, `fix`, `docs`, `refactor`, `perf`, `test`, `build`, `ci`, `chore`.
-  - Scope is optional: `tracking`, `events`, `encoder`, `eval`, `docs`.
+  - Always give a scope: `tracking`, `events`, `encoder`, `eval`, `docs`, `deps`, or a
+    topic such as `imports` or `cli` when the change spans folders.
   - Subject: imperative mood, lower case, no trailing period.
 - Write the subject line only. Leave the commit message body empty.
 
 ## Commands
 
-No toolchain is set up yet. When the first code lands, record the install, run, test, and
-lint commands here.
+- Install: `python3 -m venv .venv && .venv/bin/pip install -r requirements.txt`
+
+There are no run, test, or lint commands yet. Record them here when they land.
