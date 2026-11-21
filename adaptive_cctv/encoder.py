@@ -1,26 +1,15 @@
-"""Differential H.264 encoding: event segments at high quality, the rest at low quality.
-
-Per-segment CRF is applied in a single libx264 pass with x264 zones, so the video is
-never cut and the source timestamps (including variable frame rate) pass through as is.
-"""
-
 import argparse
 import os
 import shutil
 import subprocess
 
-# Draft values from docs/DESIGN.md; provisional until tuned on real data.
+# Draft values from docs/DESIGN.md.
 DEFAULT_HIGH_CRF = 20
 DEFAULT_LOW_CRF = 32
 DEFAULT_PRESET = "medium"
 
 
 def plan_segments(duration, intervals):
-    """Split [0, duration] into ordered (start, end, is_event) segments.
-
-    Intervals are clamped to [0, duration]; empty ones are dropped and overlapping or
-    touching ones are merged. Gaps become normal segments. No segment has zero length.
-    """
     duration = float(duration)
     if duration <= 0:
         return []
@@ -59,7 +48,6 @@ def _run(cmd):
 
 
 def _frame_times(video_path):
-    """Presentation times in seconds of every video frame, relative to the first frame."""
     out = _run(["ffprobe", "-v", "error", "-select_streams", "v:0",
                 "-show_entries", "packet=pts_time", "-of", "csv=p=0", video_path])
     times = sorted(float(line.split(",")[0]) for line in out.split()
@@ -81,20 +69,14 @@ def _duration(video_path):
 
 def _encode(video_path, output_path, crf, preset, zones=None):
     params = ["-x264-params", "zones=" + zones] if zones else []
-    # passthrough + demux time base: no frame is duplicated or dropped, and VFR
-    # timestamps are not rounded to the default 1/r_frame_rate encoder time base.
+    # passthrough + demux time base keep every frame and its exact timestamp on VFR input.
     _run(["ffmpeg", "-y", "-v", "error", "-i", video_path, "-map", "0:v:0", "-an",
           "-c:v", "libx264", "-preset", preset, "-crf", str(crf)] + params +
          ["-fps_mode", "passthrough", "-enc_time_base:v", "demux", output_path])
 
 
 def _event_zones(frame_times, segments, crf):
-    """x264 zones (inclusive frame ranges) for event segments; a frame belongs to the
-    segment that contains its presentation time, the last segment being closed.
-
-    x264 applies a zone's crf= through encoder reconfiguration; its --help lists only
-    q= and b=, so this relies on behaviour verified with the installed libx264.
-    """
+    # crf= inside zones is not in x264's documentation; verified on libx264 via ffmpeg 9.0.2.
     zones = []
     for i, (start, end, is_event) in enumerate(segments):
         if not is_event:
@@ -108,10 +90,6 @@ def _event_zones(frame_times, segments, crf):
 
 def encode_differential(video_path, intervals, output_path, high_crf=DEFAULT_HIGH_CRF,
                         low_crf=DEFAULT_LOW_CRF, preset=DEFAULT_PRESET):
-    """Encode one H.264 MP4 with event intervals at high_crf and the rest at low_crf.
-
-    Returns the planned (start, end, is_event) segments.
-    """
     _require_ffmpeg()
     segments = plan_segments(_duration(video_path), intervals)
     zones = _event_zones(_frame_times(video_path), segments, high_crf)
@@ -120,7 +98,6 @@ def encode_differential(video_path, intervals, output_path, high_crf=DEFAULT_HIG
 
 
 def encode_uniform(video_path, output_path, crf=DEFAULT_HIGH_CRF, preset=DEFAULT_PRESET):
-    """Encode the whole video at one CRF; the baseline for measuring storage savings."""
     _require_ffmpeg()
     _encode(video_path, output_path, crf, preset)
 
