@@ -13,20 +13,39 @@ This is a university capstone project (2026 fall semester).
 
 ```mermaid
 flowchart TD
-  A[CCTV video] --> B[Frame sampling<br/>every 0.1 s]
-  B --> C[Vehicle detection<br/>YOLO26n]
-  C --> D[Vehicle tracking<br/>ByteTrack]
-  D --> E[Trajectory and pixel speed<br/>per vehicle]
-  E --> F[Sudden stop detector]
-  E --> G[Path deviation detector]
-  F --> H[High-quality intervals]
-  G --> H
-  H --> I[Encoder]
-  I --> J[Stored video<br/>normal: low quality<br/>event: high quality]
+  CAM[CCTV camera] --> ORIG[(Recorded original<br/>everything at high quality)]
+  ORIG --> B
+  ORIG --> I
+  subgraph PP["adaptive-cctv: runs later, on the recorded file"]
+    B[Frame sampling<br/>every 0.1 s] --> C[Vehicle detection<br/>YOLO26n]
+    C --> D[Vehicle tracking<br/>ByteTrack]
+    D --> E[Trajectory and pixel speed<br/>per vehicle]
+    E --> F[Sudden stop detector]
+    E --> G[Path deviation detector]
+    F --> H[Event intervals]
+    G --> H
+    H --> I[Encoder<br/>event intervals: kept at high quality<br/>everything else: lowered]
+  end
+  I --> NEW[(Stored video<br/>smaller than the original)]
+  NEW --> DEL[Original deleted<br/>this is where storage is freed]
 ```
 
-The current scope is an offline pipeline that runs on recorded video on a PC. Real-time
-and on-camera operation are future work.
+How to read it:
+
+- **The starting point is a recording that already exists.** The camera has stored everything
+  at high quality; adaptive-cctv processes that file afterwards. It is post-processing, not
+  something that happens while recording.
+- **Nothing is made better.** "High quality" means an event interval is left as recorded.
+  "Low quality" means everything else is reduced. Storage is saved only by lowering the
+  parts that are not events.
+- **Events are judged on the original.** Detection and tracking read the recorded file
+  before any quality is lowered, so how hard the rest is compressed does not affect what
+  gets detected.
+- **Space is freed when the original is deleted.** Until then both files exist.
+
+Real-time and on-camera operation are future work. There, the decision has to be made while
+video is still arriving, so recent footage must be held back for a few seconds before it is
+stored.
 
 ## Status
 
