@@ -49,9 +49,8 @@ stored.
 
 ## Status
 
-Tracking, the sudden-stop detector, and a path-deviation draft are in the repository as
-separate modules. They are not connected into one pipeline yet, and the encoder is not
-written.
+Tracking, the sudden-stop detector, a path-deviation draft, and the encoder are in the
+repository as separate modules. They are not connected into one pipeline yet.
 
 ## Setup
 
@@ -59,6 +58,8 @@ written.
 python3 -m venv .venv
 .venv/bin/pip install -r requirements.txt
 ```
+
+The encoder also needs `ffmpeg` on the PATH (on macOS: `brew install ffmpeg`).
 
 ## Usage
 
@@ -71,6 +72,9 @@ your own file.
 
 # Write a copy of the video with boxes, track ids, and paths, plus a CSV of positions
 .venv/bin/python -m scripts.visualize <video> [--output OUT.mp4] [--csv OUT.csv] [--focus-id ID]
+
+# Store a video with the given time ranges at high quality and the rest at low quality
+.venv/bin/python -m adaptive_cctv.encoder <video> <output.mp4> --interval START END [--interval START END]
 ```
 
 The first run downloads the `yolo26n.pt` weights into the working directory.
